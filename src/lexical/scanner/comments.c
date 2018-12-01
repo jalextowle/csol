@@ -22,7 +22,7 @@ void comment_scanner(char* _src, char* _target) {
   if (src == NULL) {
     printf("Error opening source file.");
   } else {
-    while(fgets(read_buffer, sizeof(read_buffer), src)) {
+    while(fgets(read_buffer, BUFFER_SIZE, src)) {
       while (cur->read_cur < BUFFER_SIZE) {
         cur = comment_scan_line(cur, read_buffer, write_buffer); 
       }
@@ -53,7 +53,7 @@ int advance_to_newline(int cur, char* read) {
   while (cur < BUFFER_SIZE - 1) {
     c = *(read + cur);
     if (c == '\n') {
-      return cur; 
+      break;
     } else {
       cur++;
     } 
