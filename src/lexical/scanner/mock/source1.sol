@@ -6,5 +6,6 @@ contract A {
   modifier a() { }
 
   // This is a function
-  function b() external pure { }
+  function b() external pure { } // Removed
+  //a
 }

@@ -5,4 +5,6 @@
  * src: The filepath to the source file to scan.  
  * target: The filepath to write the updated file.
  */
-void comment_scanner(char* src, char* target);
+int comment_scanner(char* src, char* target);
+
+int multi_comment_scanner(char* src, char* target);
