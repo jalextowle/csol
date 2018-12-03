@@ -1,17 +1,49 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <check.h>
 #include "comments.h"
+#include "whitespace.h"
 
-START_TEST(single_line1) 
+int file_equal(char* _src1, char* _src2) {
+  char c1, c2;
+  FILE *src1, *src2;
+  src1 = fopen(_src1, "r");
+  src2 = fopen(_src2, "r");
+  if (src1 == NULL || src2 == NULL) {
+    return 0;
+  }
+
+  c1 = getc(src1);
+  c2 = getc(src2);
+
+  while(c1 != EOF && c2 != EOF) {
+    if (c1 != c2) {
+      printf("%c %c\n", c1, c2);
+      return 0;
+    } 
+    c1 = getc(src1);
+    c2 = getc(src2);
+  }
+  return c1 == c2;
+}
+
+START_TEST(single_line_code) 
 {
   ck_assert_int_eq(comment_scanner("/Users/alextowle/csol/src/lexical/scanner/mock/source1.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target1.sol"), 0);
-  // FIXME - Ensure that the target program is correct
 } END_TEST
 
-START_TEST(multi_line1) 
+START_TEST(single_line_correctness) {
+  ck_assert_int_eq(file_equal("/Users/alextowle/csol/src/lexical/scanner/mock/expected1.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target1.sol"), 1);
+} END_TEST
+
+START_TEST(multi_line_code1) 
 {
   ck_assert_int_eq(multi_comment_scanner("/Users/alextowle/csol/src/lexical/scanner/mock/source2.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target2.sol"), 0);
-  // FIXME - Ensure that the target program is correct
+} END_TEST
+
+START_TEST(multi_line_correctness1) 
+{
+  ck_assert_int_eq(file_equal("/Users/alextowle/csol/src/lexical/scanner/mock/expected2.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target2.sol"), 1);
 } END_TEST
 
 START_TEST(multi_line_error1) 
@@ -26,7 +58,8 @@ Suite* single_line_suite() {
 
   /* Core test case */
   tc_core = tcase_create("Core");
-  tcase_add_test(tc_core, single_line1); 
+  tcase_add_test(tc_core, single_line_code); 
+  tcase_add_test(tc_core, single_line_correctness); 
   suite_add_tcase(s, tc_core);
 
   return s;
@@ -37,7 +70,8 @@ Suite* multi_line_suite() {
   TCase *tc_core;
   s = suite_create("Multi-Line Scanner");
   tc_core = tcase_create("Core");
-  tcase_add_test(tc_core, multi_line1);
+  tcase_add_test(tc_core, multi_line_code1);
+  tcase_add_test(tc_core, multi_line_correctness1);
   tcase_add_test(tc_core, multi_line_error1);
   suite_add_tcase(s, tc_core);
 
@@ -50,6 +84,9 @@ int main() {
   Suite *s2;
   SRunner *sr1;
   SRunner *sr2;
+
+  // FIXME - Remove and add to test suite
+  whitespace_scanner("/Users/alextowle/csol/src/lexical/scanner/mock/source4.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target4.sol");
 
   s1 = single_line_suite();
   s2 = multi_line_suite();
