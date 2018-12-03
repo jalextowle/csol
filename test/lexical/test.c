@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <check.h>
-#include "comments.h"
-#include "whitespace.h"
+#include "../../src/lexical/scanner/comments.h"
+#include "../../src/lexical/scanner/whitespace.h"
 
 int file_equal(char* _src1, char* _src2) {
   char c1, c2;
@@ -29,26 +29,26 @@ int file_equal(char* _src1, char* _src2) {
 
 START_TEST(single_line_code) 
 {
-  ck_assert_int_eq(comment_scanner("/Users/alextowle/csol/src/lexical/scanner/mock/source1.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target1.sol"), 0);
+  ck_assert_int_eq(comment_scanner("/Users/alextowle/csol/test/lexical/mock/source1.sol", "/Users/alextowle/csol/test/lexical/mock/target1.sol"), 0);
 } END_TEST
 
 START_TEST(single_line_correctness) {
-  ck_assert_int_eq(file_equal("/Users/alextowle/csol/src/lexical/scanner/mock/expected1.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target1.sol"), 1);
+  ck_assert_int_eq(file_equal("/Users/alextowle/csol/test/lexical/mock/expected1.sol", "/Users/alextowle/csol/test/lexical/mock/target1.sol"), 1);
 } END_TEST
 
 START_TEST(multi_line_code1) 
 {
-  ck_assert_int_eq(multi_comment_scanner("/Users/alextowle/csol/src/lexical/scanner/mock/source2.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target2.sol"), 0);
+  ck_assert_int_eq(multi_comment_scanner("/Users/alextowle/csol/test/lexical/mock/source2.sol", "/Users/alextowle/csol/test/lexical/mock/target2.sol"), 0);
 } END_TEST
 
 START_TEST(multi_line_correctness1) 
 {
-  ck_assert_int_eq(file_equal("/Users/alextowle/csol/src/lexical/scanner/mock/expected2.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target2.sol"), 1);
+  ck_assert_int_eq(file_equal("/Users/alextowle/csol/test/lexical/mock/expected2.sol", "/Users/alextowle/csol/test/lexical/mock/target2.sol"), 1);
 } END_TEST
 
 START_TEST(multi_line_error1) 
 {
-  ck_assert_int_eq(multi_comment_scanner("/Users/alextowle/csol/src/lexical/scanner/mock/source3.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target3.sol"), 1);
+  ck_assert_int_eq(multi_comment_scanner("/Users/alextowle/csol/test/lexical/mock/source3.sol", "/Users/alextowle/csol/test/lexical/mock/target3.sol"), 1);
 } END_TEST
 
 Suite* single_line_suite() {
@@ -86,7 +86,7 @@ int main() {
   SRunner *sr2;
 
   // FIXME - Remove and add to test suite
-  whitespace_scanner("/Users/alextowle/csol/src/lexical/scanner/mock/source4.sol", "/Users/alextowle/csol/src/lexical/scanner/mock/target4.sol");
+  whitespace_scanner("/Users/alextowle/csol/test/lexical/mock/source4.sol", "/Users/alextowle/csol/test/lexical/mock/target4.sol");
 
   s1 = single_line_suite();
   s2 = multi_line_suite();
