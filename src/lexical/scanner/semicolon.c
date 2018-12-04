@@ -1,4 +1,3 @@
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #define BUFFER_SIZE 1000
@@ -11,9 +10,9 @@ typedef struct {
   int error_code;
 } current; 
 
-void whitespace_scan(current* cur, char* read, char* write) {
+void semicolon_scan(current* cur, char *read, char *write) {
   char c;
-  while (cur->read_ptr < BUFFER_SIZE && cur->write_ptr < BUFFER_SIZE) {
+  while (cur->read_ptr < BUFFER_SIZE) {
     c = *(read + cur->read_ptr); 
     if (c == '\0' || c == EOF) {
       *(write + cur->write_ptr) = c;
@@ -27,15 +26,15 @@ void whitespace_scan(current* cur, char* read, char* write) {
       }
       *(write + cur->write_ptr) = c;
       cur->write_ptr++;
-    } else if (isspace((int) c)) {
-      if (!cur->flag && !cur->ignore) {
-        *(write + cur->write_ptr) = '\x20';
-        cur->write_ptr++;
-        cur->flag = 1;
-      }
+    } else if (c == ';' && !cur->ignore) {
+      *(write + cur->write_ptr) = '\x20';
+      *(write + cur->write_ptr++) = c;
+      cur->write_ptr += 2;
     } else {
       if (cur->flag && !cur->ignore) {
         cur->flag = 0;
+        *(write + cur->write_ptr) = c;
+        cur->write_ptr++;
       } else {
         *(write + cur->write_ptr) = c;
         cur->write_ptr++;
@@ -45,7 +44,7 @@ void whitespace_scan(current* cur, char* read, char* write) {
   }
 }
 
-int whitespace_scanner(char* _src, char* _target) {
+int semicolon_scanner(char *_src, char *_target) {
   current *cur;
   char *read, *write;
   FILE *src, *target;
@@ -57,13 +56,13 @@ int whitespace_scanner(char* _src, char* _target) {
   src = fopen(_src, "r");
   target = fopen(_target, "w");
   read = malloc(sizeof(char) * BUFFER_SIZE);
-  write = malloc(sizeof(char) * BUFFER_SIZE);
+  write = malloc(sizeof(char) * BUFFER_SIZE * 2);
  
   if (src == NULL) {
     printf("Error opening source file");
   } else {
     while (fgets(read, sizeof(char) * BUFFER_SIZE, src)) {
-      whitespace_scan(cur, read, write);      
+      semicolon_scan(cur, read, write);      
       fprintf(target, "%s", write);
       cur->read_ptr = 0;
       cur->write_ptr = 0;

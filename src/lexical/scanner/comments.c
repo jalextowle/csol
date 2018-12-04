@@ -14,7 +14,6 @@ typedef struct {
 } current;
 
 void throw_error(int error_code) {
-  /* FIXME */
   printf("Exited with error code: %d\n", error_code);
 }
 
